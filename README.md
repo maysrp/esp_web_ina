@@ -1,5 +1,5 @@
 # esp_web_ina
-使用ESP01s和INA3221的网络电流表
+使用ESP01s和INA3221的网络电流表，该版本使用Micropython 1.20为基础。
 
 #### 介绍
 ESP8266下的电流表,使用ESP01s,OLED(SSD1306),INA3221模块，
@@ -12,6 +12,9 @@ ESP8266下的电流表,使用ESP01s,OLED(SSD1306),INA3221模块，
 
 WEB界面 400mS 一次访问 
 
+### 固件烧录
+请先将ESP01s(ESP8266)烧录micropython 1.20固件
+https://micropython.org/resources/firmware/esp8266-1m-20230426-v1.20.0.bin
 
 ### 连接
 |ESP01S(ESP8266)|OLED|INA3221|-|
