@@ -39,3 +39,8 @@ https://micropython.org/resources/firmware/esp8266-1m-20230426-v1.20.0.bin
 
 默认INA3221地址为0x40
 `ina=ina3221.INA3221(i2c,addr=0x40) #A0与GND`
+
+### PCB
+第一次搞PCB，及其不美观~~
+可以参考打板
+https://oshwhub.com/circuitpython/ina8266
