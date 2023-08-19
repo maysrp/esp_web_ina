@@ -1,0 +1,161 @@
+<div class="x-f">
+<h2>一通道电流:<span id="a_1">{{a_1}}</span>mA</h2>
+
+<h2>二通道电流:<span id="a_2">{{a_2}}</span>mA</h2>
+
+<h2>三通道电流:<span id="a_3">{{a_3}}</span>mA</h2>
+<button id="download">下载电流数据</button>
+</div>
+
+<div class="x-f">
+<div class="canvas-wrapper" >
+    <canvas id="canvas1"></canvas>
+</div>
+</div>
+
+<script>
+function JSONToExcelConvertor(JSONData, FileName) {
+    if(!JSONData){
+        return;
+    }
+    var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+    var excel = "<table>";
+
+    row = "<tr>";
+    for (i = 0; i < arrData.length; i++) {
+        row+= '<td>通道' +(i+1)+ '(单位:mA)</td>';
+    }
+    row +="</tr>";
+    list_0=arrData[0];
+    list_1=arrData[1];
+    list_2=arrData[2];
+    for (var index in list_0){
+        row += "<tr>";
+        row += "<td align='center'>" + list_0[index] + "</td>";
+        row += "<td align='center'>" + list_1[index] + "</td>";
+        row += "<td align='center'>" + list_2[index] + "</td>";
+
+        row +="</tr>";
+
+    }
+    excel+=row
+
+    excel += "</table>";
+
+    var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";
+    excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';
+    excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel';
+    excelFile += '; charset=UTF-8">';
+    excelFile += "<head>";
+    excelFile += "<!--[if gte mso 9]>";
+    excelFile += "<xml>";
+    excelFile += "<x:ExcelWorkbook>";
+    excelFile += "<x:ExcelWorksheets>";
+    excelFile += "<x:ExcelWorksheet>";
+    excelFile += "<x:Name>";
+    excelFile += "{worksheet}";
+    excelFile += "</x:Name>";
+    excelFile += "<x:WorksheetOptions>";
+    excelFile += "<x:DisplayGridlines/>";
+    excelFile += "</x:WorksheetOptions>";
+    excelFile += "</x:ExcelWorksheet>";
+    excelFile += "</x:ExcelWorksheets>";
+    excelFile += "</x:ExcelWorkbook>";
+    excelFile += "</xml>";
+    excelFile += "<![endif]-->";
+    excelFile += "</head>";
+    excelFile += "<body>";
+    excelFile += excel;
+    excelFile += "</body>";
+    excelFile += "</html>";
+
+
+    var uri = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(excelFile);
+
+    var link = document.createElement("a");
+    link.href = uri;
+
+    link.style = "visibility:hidden";
+    link.download = FileName + ".xls";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+document.getElementById("download").onclick=function(){
+ JSONToExcelConvertor([ina["a_1"],ina["a_2"],ina["a_3"]],"ina")
+}
+</script>
+<script>
+var ina={};
+ina["a_1"]=[];
+ina["a_2"]=[];
+ina["a_3"]=[];
+function send() {
+    xmlHttp=new XMLHttpRequest();
+    xmlHttp.open("GET","/i",true);
+    xmlHttp.send();
+    xmlHttp.onreadystatechange=function () {
+      if (xmlHttp.readyState ==4 && xmlHttp.status ==200){
+         var data = JSON.parse(xmlHttp.responseText);
+         document.getElementById("a_1").innerHTML=data.a_1;
+         ina["a_1"].push(data.a_1)
+         document.getElementById("a_2").innerHTML=data.a_2;
+         ina["a_2"].push(data.a_2)
+         document.getElementById("a_3").innerHTML=data.a_3;
+         ina["a_3"].push(data.a_3)
+         
+ 
+      }
+    }
+ 
+ }
+ 
+function xlabels(a,ms){
+    if(a.length==0){
+        return [1];
+    }
+    var arr = new Array();
+        for(var i=0;i<a.length;i++){
+          arr.push(i*ms);
+    }
+    return arr;
+ 
+ }
+ function line(a,b,c,ms=1){
+     new Schart('canvas1', {
+                type: 'line',
+                title: {
+                    text: '电流测试情况',
+                },
+                labels:xlabels(a,ms),
+                bgColor: '#fbfbfb',
+                datasets: [{
+                    label: '通道1',
+                    data: a
+                }, {
+                    label: '通道2',
+                    data: b
+                }, {
+                    label: '通道3',
+                    data: c
+                }]
+            })
+}
+
+function xp(){
+    send();
+    a=ina.a_1
+    b=ina.a_2
+    c=ina.a_3
+    if(ina.a_1.length>20){
+        a=ina.a_1.slice(-20)
+        b=ina.a_2.slice(-20)
+        c=ina.a_3.slice(-20)
+    }
+    line(a,b,c);
+}
+setInterval(xp,400)
+
+</script>
