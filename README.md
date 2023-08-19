@@ -34,4 +34,5 @@ WEB界面 400mS 一次访问
 * ssd1301.py
 * ina3221.py
 
+默认INA3221地址为0x40
 `ina=ina3221.INA3221(i2c,addr=0x40) #A0与GND`
