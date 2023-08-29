@@ -28,7 +28,7 @@ https://micropython.org/resources/firmware/esp8266-1m-20230426-v1.20.0.bin
 ### 上传文件
 
 请依次上传以下文件
-* main.py (WEB 配网判断没有弄)
+* main.py 
 * just_oled.py 
 * layout.html
 * content.html
